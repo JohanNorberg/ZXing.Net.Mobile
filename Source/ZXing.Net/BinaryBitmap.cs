@@ -173,6 +173,7 @@ namespace ZXing
       /// </returns>
       public override string ToString()
       {
+			return "BinaryBitmap";
          var blackMatrix = BlackMatrix;
          return blackMatrix != null ? blackMatrix.ToString() : String.Empty;
       }

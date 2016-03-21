@@ -6,6 +6,7 @@ using Android.Widget;
 using Android.OS;
 using ZXing;
 using ZXing.Mobile;
+using Android.Content;
 
 namespace Sample.Android
 {
@@ -19,6 +20,23 @@ namespace Sample.Android
         Button buttonGenerate;
 
 		MobileBarcodeScanner scanner;
+
+		protected override void OnActivityResult (int requestCode, global::Android.App.Result resultCode, Intent data)
+		{
+			base.OnActivityResult (requestCode, resultCode, data);
+			if (requestCode == 1578) {
+				var resultText = data?.GetStringExtra ("ScanResult");
+
+				string msg = "";
+
+				if (!string.IsNullOrEmpty(resultText))
+					msg = "Found Barcode: " + resultText;
+				else
+					msg = "Scanning Canceled!";
+
+				this.RunOnUiThread(() => Toast.MakeText(this, msg, ToastLength.Short).Show());
+			}
+		}
 	
 		protected override void OnCreate (Bundle bundle)
 		{
@@ -47,6 +65,7 @@ namespace Sample.Android
 				var result = await scanner.Scan();
 
 				HandleScanResult(result);
+				//StartActivityForResult(typeof(JohanScanActivity), 1578);
 			};
 
             buttonContinuousScan = FindViewById<Button> (Resource.Id.buttonScanContinuous);
