@@ -219,5 +219,4 @@ namespace ZXing.Mobile
             return base.OnKeyDown (keyCode, e);
         }
     }
-
 }

@@ -190,11 +190,11 @@ namespace ZXing.Mobile
 
 			camera.SetParameters (parameters);
 
-            //Test to set cameraorientation to always 0 degree to prevent problem with upsidedown-picture
+            		//Test to set cameraorientation to always 0 degree to prevent problem with upsidedown-picture
 			//SetCameraDisplayOrientation (this.activity);
-            camera.SetDisplayOrientation(0);
+            		camera.SetDisplayOrientation(0);
 
-            camera.SetPreviewDisplay (this.Holder);
+            		camera.SetPreviewDisplay (this.Holder);
 			camera.StartPreview ();
 
 			PerformanceCounter.Stop (perf, "SurfaceChanged took {0}ms");
