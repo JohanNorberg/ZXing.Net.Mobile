@@ -70,7 +70,9 @@ namespace ZXing.Mobile
 
         public void SurfaceCreated (ISurfaceHolder holder)
         {
-			lastPreviewAnalysis = DateTime.UtcNow.AddMilliseconds (this.scanningOptions.InitialDelayBeforeAnalyzingFrames);
+            if (scanningOptions==null) scanningOptions = MobileBarcodeScanningOptions.Default;
+
+            lastPreviewAnalysis = DateTime.UtcNow.AddMilliseconds (this.scanningOptions.InitialDelayBeforeAnalyzingFrames);
 			isAnalyzing = true;
 
 			Console.WriteLine ("StartScanning");
@@ -188,9 +190,11 @@ namespace ZXing.Mobile
 
 			camera.SetParameters (parameters);
 
-			SetCameraDisplayOrientation (this.activity);
+            //Test to set cameraorientation to always 0 degree to prevent problem with upsidedown-picture
+			//SetCameraDisplayOrientation (this.activity);
+            camera.SetDisplayOrientation(0);
 
-			camera.SetPreviewDisplay (this.Holder);
+            camera.SetPreviewDisplay (this.Holder);
 			camera.StartPreview ();
 
 			PerformanceCounter.Stop (perf, "SurfaceChanged took {0}ms");
@@ -584,7 +588,7 @@ namespace ZXing.Mobile
                     var msg = "ZXing.Net.Mobile requires: " + permission + ", but was not found in your AndroidManifest.xml file.";
                     Android.Util.Log.Error ("ZXing.Net.Mobile", msg);
 
-                    throw new UnauthorizedAccessException (msg);
+                    //throw new UnauthorizedAccessException (msg);
                 }
             }
 

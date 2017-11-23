@@ -30,7 +30,7 @@ namespace ZXing.Mobile
         }
 
         public void OnActivityResumed (Activity activity)
-        {
+        {            
             currentActivity = activity;
         }
 
