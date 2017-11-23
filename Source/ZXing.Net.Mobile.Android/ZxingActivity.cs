@@ -20,7 +20,7 @@ using System.Linq;
 
 namespace ZXing.Mobile
 {
-    [Activity (Label = "Scanner", ConfigurationChanges = ConfigChanges.Orientation | ConfigChanges.KeyboardHidden | ConfigChanges.ScreenLayout)]
+    [Activity (Label = "Scanner", ScreenOrientation = ScreenOrientation.Landscape, ConfigurationChanges = ConfigChanges.Orientation | ConfigChanges.KeyboardHidden | ConfigChanges.ScreenLayout)]
     public class ZxingActivity : FragmentActivity
     {
         public static readonly string[] RequiredPermissions = new[] {
@@ -88,54 +88,63 @@ namespace ZXing.Mobile
         bool waitingForPermission = false;
         bool canScan = true;
 
-        protected override void OnCreate (Bundle bundle)
+        private void Renderview()
         {
-            base.OnCreate (bundle);
-
-            this.RequestWindowFeature (WindowFeatures.NoTitle);
-
-            this.Window.AddFlags (WindowManagerFlags.Fullscreen); //to show
-            this.Window.AddFlags (WindowManagerFlags.KeepScreenOn); //Don't go to sleep while scanning
+            this.Window.AddFlags(WindowManagerFlags.Fullscreen); //to show
+            this.Window.AddFlags(WindowManagerFlags.KeepScreenOn); //Don't go to sleep while scanning
 
             if (ScanningOptions.AutoRotate.HasValue && !ScanningOptions.AutoRotate.Value)
                 RequestedOrientation = ScreenOrientation.Nosensor;
 
-            SetContentView (Resource.Layout.zxingscanneractivitylayout);
+            SetContentView(Resource.Layout.zxingscanneractivitylayout);
 
-            scannerFragment = new ZXingScannerFragment ();
+            scannerFragment = new ZXingScannerFragment();
             scannerFragment.CustomOverlayView = CustomOverlayView;
             scannerFragment.UseCustomOverlayView = UseCustomOverlayView;
             scannerFragment.TopText = TopText;
             scannerFragment.BottomText = BottomText;
 
-            SupportFragmentManager.BeginTransaction ()
-				.Replace (Resource.Id.contentFrame, scannerFragment, "ZXINGFRAGMENT")
-				.Commit ();
-            
+            SupportFragmentManager.BeginTransaction()
+                .Replace(Resource.Id.contentFrame, scannerFragment, "ZXINGFRAGMENT")
+                .Commit();
+
             CancelRequestedHandler = CancelScan;
             AutoFocusRequestedHandler = AutoFocus;
             TorchRequestedHandler = SetTorch;
             PauseAnalysisHandler = scannerFragment.PauseAnalysis;
             ResumeAnalysisHandler = scannerFragment.ResumeAnalysis;
 
-            var permissionsToRequest = new List<string> ();
+            var permissionsToRequest = new List<string>();
 
             // Check and request any permissions
-            foreach (var permission in RequiredPermissions) {
-                if (PlatformChecks.IsPermissionInManifest (this, permission)) {
-                    if (!PlatformChecks.IsPermissionGranted (this, permission))
-                        permissionsToRequest.Add (permission);                        
+            foreach (var permission in RequiredPermissions)
+            {
+                if (PlatformChecks.IsPermissionInManifest(this, permission))
+                {
+                    if (!PlatformChecks.IsPermissionGranted(this, permission))
+                        permissionsToRequest.Add(permission);
                 }
             }
 
-            if (permissionsToRequest.Any ()) {
-                waitingForPermission = PlatformChecks.RequestPermissions (this, permissionsToRequest.ToArray (), 101);
+            if (permissionsToRequest.Any())
+            {
+                waitingForPermission = PlatformChecks.RequestPermissions(this, permissionsToRequest.ToArray(), 101);
             }
+        }
+
+        protected override void OnCreate (Bundle bundle)
+        {
+            base.OnCreate (bundle);
+            this.RequestWindowFeature(WindowFeatures.NoTitle);
+
+            Renderview();
         }
 
         protected override void OnResume ()
         {
             base.OnResume ();
+
+            Renderview();
 
             try {
                 if (!waitingForPermission && canScan)
