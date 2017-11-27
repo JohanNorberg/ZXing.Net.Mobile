@@ -130,6 +130,7 @@ namespace ZXing.Mobile
             {
                 waitingForPermission = PlatformChecks.RequestPermissions(this, permissionsToRequest.ToArray(), 101);
             }
+
         }
 
         protected override void OnCreate (Bundle bundle)
@@ -138,15 +139,22 @@ namespace ZXing.Mobile
             this.RequestWindowFeature(WindowFeatures.NoTitle);
 
             Renderview();
+
+        }
+
+        protected override void OnPause()
+        {
+            base.OnPause();
+            //If we are in background we want to cancel scan due to problem wih Autofocus. User have scan again
+            CancelScan();
         }
 
         protected override void OnResume ()
         {
             base.OnResume ();
 
-            Renderview();
-
-            try {
+            try
+            {
                 if (!waitingForPermission && canScan)
                     StartScanning ();
             } catch (Exception ex) {
