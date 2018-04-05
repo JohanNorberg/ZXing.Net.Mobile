@@ -40,8 +40,8 @@ namespace ZXing.Mobile
 		public partial class Id
 		{
 			
-			// aapt resource value: 0x7f040000
-			public static int contentFrame = 2130968576;
+			// aapt resource value: 0x7f030000
+			public static int contentFrame = 2130903040;
 			
 			static Id()
 			{
@@ -68,22 +68,6 @@ namespace ZXing.Mobile
 			}
 			
 			private Layout()
-			{
-			}
-		}
-		
-		public partial class String
-		{
-			
-			// aapt resource value: 0x7f030000
-			public static int library_name = 2130903040;
-			
-			static String()
-			{
-				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
-			}
-			
-			private String()
 			{
 			}
 		}
